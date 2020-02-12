@@ -1,4 +1,5 @@
 package im.status.ethereum;
+import android.webkit.WebView;
 
 import androidx.multidex.MultiDexApplication;
 import android.util.Log;
@@ -8,10 +9,10 @@ import com.facebook.react.bridge.JavaScriptExecutorFactory;
 
 import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 
 import java.util.List;
 
@@ -33,7 +34,6 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
             packages.add(statusPackage);
             packages.add(new ReactNativeDialogsPackage());
             packages.add(new RNStatusKeycardPackage());
-            packages.add(new WebViewBridgePackage(BuildConfig.DEBUG_WEBVIEW == "1"));
             return packages;
         }
 
@@ -52,5 +52,6 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     public void onCreate() {
         super.onCreate();
         SoLoader.init(this, /* native exopackage */ false);
+        WebView.setWebContentsDebuggingEnabled(true);
     }
 }

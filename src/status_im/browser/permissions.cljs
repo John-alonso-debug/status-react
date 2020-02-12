@@ -56,7 +56,7 @@
                                               :messageId  message-id}
                                        allowed?
                                        (assoc :data data))
-                            :webview (:webview-bridge db)}})
+                            :webview (:webview db)}})
 
 (fx/defn update-dapp-permissions
   [{:keys [db]} dapp-name permission allowed?]

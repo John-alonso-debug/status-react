@@ -152,7 +152,7 @@ TODO: updating requires a pod update on iOS
 
 used for touch-id identification
 
-## "react-native-webview-bridge": "git+https://github.com/status-im/react-native-webview-bridge.git#fix/classnames-colision"
+## "react-native-webview": "git+https://github.com/status-im/react-native-webview.git#js_injection_before_load"
 
 used for browser
 

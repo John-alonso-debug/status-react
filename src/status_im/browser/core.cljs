@@ -283,16 +283,16 @@
 
 (fx/defn web3-error-callback
   {:events [:browser.dapp/transaction-on-error]}
-  [{{:keys [webview-bridge]} :db} message-id message]
+  [{{:keys [webview]} :db} message-id message]
   {:browser/send-to-bridge
    {:message {:type      constants/web3-send-async-callback
               :messageId message-id
               :error     message}
-    :webview webview-bridge}})
+    :webview webview}})
 
 (fx/defn dapp-complete-transaction
   {:events [:browser.dapp/transaction-on-result]}
-  [{{:keys [webview-bridge]} :db} message-id id result]
+  [{{:keys [webview]} :db} message-id id result]
   ;;TODO check and test id
   {:browser/send-to-bridge
    {:message {:type      constants/web3-send-async-callback
@@ -300,7 +300,7 @@
               :result    {:jsonrpc "2.0"
                           :id      (int id)
                           :result  result}}
-    :webview webview-bridge}})
+    :webview webview}})
 
 (defn normalize-sign-message-params
   "NOTE (andrey) we need this function, because params may be mixed up"
@@ -316,7 +316,7 @@
 (fx/defn send-to-bridge
   [cofx message]
   {:browser/send-to-bridge {:message message
-                            :webview (get-in cofx [:db :webview-bridge])}})
+                            :webview (get-in cofx [:db :webview])}})
 
 (fx/defn web3-send-async
   [cofx {:keys [method params id] :as payload} message-id]
@@ -420,7 +420,11 @@
  :browser/send-to-bridge
  (fn [{:keys [message webview]}]
    (when (and message webview)
-     (.sendToBridge webview (types/clj->json message)))))
+     (.injectJavaScript webview
+                        (str "(function() {"
+                             "window.ReactNativeWebView.onMessage(\""
+                             (types/clj->json message)
+                             "\")})")))))
 
 (re-frame/reg-fx
  :browser/call-rpc

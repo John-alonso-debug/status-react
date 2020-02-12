@@ -4,7 +4,7 @@ var callbacks = {};
 var currentAccountAddress;
 
 function bridgeSend(data){
-    WebViewBridge.send(JSON.stringify(data));
+    ReactNativeWebView.postMessage(JSON.stringify(data));
 }
 
 function sendAPIrequest(permission, params) {
@@ -58,7 +58,7 @@ function UserRejectedRequest() {
 }
 UserRejectedRequest.prototype = Object.create(Error.prototype);
 
-WebViewBridge.onMessage = function (message)
+ReactNativeWebView.onMessage = function (message)
 {
     data = JSON.parse(message);
     var id = data.messageId;
