@@ -43,3 +43,12 @@
   {:flex 1
    :justify-content :center
    :align-items :center})
+
+(def search-container
+  {:border-bottom-color colors/gray-lighter
+   :border-bottom-width 1})
+
+(def members-title
+  {:color         colors/gray
+   :margin-top    14
+   :margin-bottom 4})

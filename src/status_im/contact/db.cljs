@@ -63,7 +63,7 @@
 (defn public-key->new-contact [public-key]
   (let [alias (gfycat/generate-gfy public-key)]
     {:alias       alias
-     :name        alias
+     ;; :name        alias
      :identicon   (identicon/identicon public-key)
      :public-key  public-key
      :system-tags #{}}))
