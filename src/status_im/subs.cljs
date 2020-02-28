@@ -1692,8 +1692,7 @@
  :<- [:contacts/contacts]
  :<- [:multiaccount]
  (fn [[{:keys [contacts admins]} all-contacts current-multiaccount]]
-   (map #(assoc % :name (multiaccounts/displayed-name %))
-        (contact.db/get-all-contacts-in-group-chat contacts admins all-contacts current-multiaccount))))
+   (contact.db/get-all-contacts-in-group-chat contacts admins all-contacts current-multiaccount)))
 
 (re-frame/reg-sub
  :contacts/contacts-by-chat

@@ -1,10 +1,11 @@
 (ns status-im.ui.components.contact.styles
   (:require [status-im.ui.components.colors :as colors]))
 
-(def contact-container-to-refactor
-  {:flex-direction :row
-   :justify-content :center
-   :align-items :center
+(def contact-container
+  {:flex-direction     :row
+   :justify-content    :center
+   :align-items        :center
+   :padding-vertical   12
    :padding-horizontal 16})
 
 (def info-container-to-refactor

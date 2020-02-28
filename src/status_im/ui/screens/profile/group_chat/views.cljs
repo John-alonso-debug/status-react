@@ -33,19 +33,18 @@
        :label  (i18n/label :t/make-admin)}])))
 
 (defn render-member [chat-id {:keys [name public-key] :as member} admin? current-user-identity]
-  [react/view {:padding-vertical 10}
-   [contact/contact-view
-    {:contact             member
-     :extend-options      (member-actions chat-id member admin?)
-     :info                (when (:admin? member)
-                            (i18n/label :t/group-chat-admin))
-     :extend-title        name
-     :extended?           (and admin?
-                               (not= public-key current-user-identity))
-     :accessibility-label :member-item
-     :inner-props         {:accessibility-label :member-name-text}
-     :on-press            (when (not= public-key current-user-identity)
-                            #(re-frame/dispatch [(if platform/desktop? :show-profile-desktop :chat.ui/show-profile) public-key]))}]])
+  [contact/contact-view
+   {:contact             member
+    :extend-options      (member-actions chat-id member admin?)
+    :info                (when (:admin? member)
+                           (i18n/label :t/group-chat-admin))
+    :extend-title        name
+    :extended?           (and admin?
+                              (not= public-key current-user-identity))
+    :accessibility-label :member-item
+    :inner-props         {:accessibility-label :member-name-text}
+    :on-press            (when (not= public-key current-user-identity)
+                           #(re-frame/dispatch [(if platform/desktop? :show-profile-desktop :chat.ui/show-profile) public-key]))}])
 
 (defview chat-group-members-view [chat-id admin? current-user-identity]
   (letsubs [members [:contacts/current-chat-contacts]]

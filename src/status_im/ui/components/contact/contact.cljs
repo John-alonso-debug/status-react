@@ -5,6 +5,7 @@
             [status-im.ui.components.contact.styles :as styles]
             [status-im.ui.components.icons.vector-icons :as vector-icons]
             [status-im.ui.components.list-selection :as list-selection]
+            [status-im.ethereum.stateofus :as stateofus]
             [status-im.ui.components.list.views :as list]
             [status-im.ui.components.react :as react]
             [status-im.utils.gfycat.core :as gfycat]
@@ -20,6 +21,10 @@
              [react/view {}
               [react/text label]]]))])
 
+(defn format-name [username]
+  (some->> (or (stateofus/username username) username)
+          (str "@")))
+
 (defn contact-view
   [{:keys [style contact extended? on-press extend-options extend-title
            info show-forward? accessibility-label inner-props]
@@ -28,7 +33,7 @@
   [react/touchable-highlight (merge {:accessibility-label accessibility-label}
                                     (when-not extended?
                                       {:on-press (when on-press #(on-press contact))}))
-   [react/view styles/contact-container-to-refactor
+   [react/view {:style styles/contact-container}
     [chat-icon/contact-icon-contacts-tab contact]
     [react/view styles/info-container-to-refactor
      [react/text (merge {:style           styles/name-text
@@ -36,7 +41,7 @@
                         inner-props)
       (if (string/blank? name)
         (gfycat/generate-gfy public-key)
-        (or name (i18n/label :t/chat-name)))]
+        (or (format-name name) (i18n/label :t/chat-name)))]
      (when info
        [react/text {:style styles/info-text}
         info])]
@@ -68,4 +73,4 @@
                      :number-of-lines 1}
          (if (string/blank? name)
            (gfycat/generate-gfy public-key)
-           (or name (i18n/label :t/chat-name)))]]]]]))
+           (or (format-name name) (i18n/label :t/chat-name)))]]]]]))

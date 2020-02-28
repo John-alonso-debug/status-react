@@ -63,7 +63,7 @@
 (defn public-key->new-contact [public-key]
   (let [alias (gfycat/generate-gfy public-key)]
     {:alias       alias
-     ;; :name        alias
+     :name        alias
      :identicon   (identicon/identicon public-key)
      :public-key  public-key
      :system-tags #{}}))
@@ -105,10 +105,8 @@
     (query-fn (comp participant-set :public-key) (vals all-contacts))))
 
 (defn get-all-contacts-in-group-chat
-  [members admins contacts current-account]
-  (let [{:keys [public-key] :as current-account-contact}
-        (select-keys current-account [:name :photo-path :public-key])
-        all-contacts (assoc contacts public-key current-account-contact)]
+  [members admins contacts {:keys [public-key] :as current-account}]
+  (let [all-contacts (assoc contacts public-key current-account)]
     (->> members
          (map #(or (get all-contacts %)
                    (public-key->new-contact %)))
