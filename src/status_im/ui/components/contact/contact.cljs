@@ -23,7 +23,7 @@
 
 (defn format-name [username]
   (some->> (or (stateofus/username username) username)
-          (str "@")))
+           (str "@")))
 
 (defn contact-view
   [{:keys [style contact extended? on-press extend-options extend-title

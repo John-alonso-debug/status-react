@@ -1,5 +1,12 @@
 (ns status-im.ui.screens.group.styles
-  (:require [status-im.ui.components.colors :as colors]))
+  (:require [status-im.ui.components.colors :as colors]
+            [status-im.utils.platform :as platform]))
+
+(def tabs-height
+  (cond
+    platform/android? 52
+    platform/ios? 52
+    platform/desktop? 36))
 
 (defn toolbar-icon [enabled?]
   {:width   20
@@ -30,8 +37,13 @@
    :margin-horizontal 17})
 
 (def bottom-container
-  {:padding-horizontal 12
-   :padding-vertical   15})
+  {:align-items      :center
+   :justify-content  :space-between
+   :flex-direction   :row
+   :height           tabs-height
+   :background-color colors/white
+   :border-top-width 1
+   :border-top-color colors/black-transparent})
 
 (def toolbar-header-container
   {:align-items :center})
