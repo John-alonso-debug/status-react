@@ -21,14 +21,14 @@
              [react/view {}
               [react/text label]]]))])
 
-(defn format-name [username]
-  (some->> (or (stateofus/username username) username)
-           (str "@")))
+(defn format-name [{:keys [ens-verified name public-key]}]
+  (if ens-verified
+    (str "@" (or (stateofus/username name) name))
+    (gfycat/generate-gfy public-key)))
 
 (defn contact-view
-  [{:keys [style contact extended? on-press extend-options extend-title
+  [{:keys [style contact extended? on-press extend-options
            info show-forward? accessibility-label inner-props]
-    {:keys [public-key name]} :contact
     :or   {accessibility-label :contact-item}}]
   [react/touchable-highlight (merge {:accessibility-label accessibility-label}
                                     (when-not extended?
@@ -39,27 +39,21 @@
      [react/text (merge {:style           styles/name-text
                          :number-of-lines 1}
                         inner-props)
-      (if (string/blank? name)
-        (gfycat/generate-gfy public-key)
-        (or (format-name name) (i18n/label :t/chat-name)))]
-     (when info
-       [react/text {:style styles/info-text}
-        info])]
+      (or (format-name contact) (i18n/label :t/chat-name))]]
     (when show-forward?
       [react/view styles/forward-btn
        [vector-icons/icon :main-icons/next]])
-    (when (and extended? (not (empty? extend-options)))
-      (if platform/desktop?
-        (desktop-extended-options extend-options)
-        [react/view styles/more-btn-container
-         [react/touchable-highlight {:on-press            #(list-selection/show {:options extend-options
-                                                                                 :title   extend-title})
-                                     :accessibility-label :menu-option}
-          [react/view styles/more-btn
-           [vector-icons/icon :main-icons/more {:accessibility-label :options}]]]]))]])
+    (when info
+      [react/text {:style styles/info-text}
+       info])
+    (when (and extended? extend-options)
+      [react/view
+       [react/touchable-highlight {:on-press            extend-options
+                                   :accessibility-label :menu-option}
+        [vector-icons/icon :main-icons/more {:accessibility-label :options}]]])]])
 
 (views/defview toggle-contact-view
-  [{:keys [public-key name] :as contact} selected-key on-toggle-handler disabled?]
+  [{:keys [public-key] :as contact} selected-key on-toggle-handler disabled?]
   (views/letsubs [checked [selected-key public-key]]
     [react/view {:accessibility-label :contact-item}
      [list/list-item-with-checkbox
@@ -71,6 +65,4 @@
        [react/view styles/info-container
         [react/text {:style           styles/name-text
                      :number-of-lines 1}
-         (if (string/blank? name)
-           (gfycat/generate-gfy public-key)
-           (or (format-name name) (i18n/label :t/chat-name)))]]]]]))
+         (or (format-name contact) (i18n/label :t/chat-name))]]]]]))

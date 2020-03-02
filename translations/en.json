@@ -176,6 +176,7 @@
     "create-pin": "Create 6-digit passcode",
     "create-pin-description": "You'll need your card + this 6-digit passcode to unlock Status and to confirm transactions",
     "created-group-chat-description": "You created the group {{group-name}}",
+    "members-count": "{{count}} members",
     "cryptokitty-name": "CryptoKitty #{{id}}",
     "currency": "Currency",
     "currency-display-name-aed": "Emirati Dirham",

@@ -33,13 +33,6 @@
    :align-items     :center
    :justify-content :center})
 
-(def more-btn-container
-  {:align-items     :center
-   :justify-content :center})
-
-(def more-btn
-  {:padding 16})
-
 (def toggle-container
   {:width          56
    :height         56

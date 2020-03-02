@@ -7,6 +7,8 @@
             [status-im.ui.screens.profile.components.views :as profile.components]
             [status-im.ui.components.contact.contact :as contact]
             [status-im.ui.components.list.views :as list]
+            [status-im.ui.screens.chat.sheets :as chat.sheets]
+            [status-im.multiaccounts.core :as multiaccounts]
             [re-frame.core :as re-frame]
             [status-im.i18n :as i18n]
             [status-im.ui.components.list-item.views :as list-item]
@@ -20,22 +22,41 @@
         :accessibility-label :edit-button
         :handler             #(re-frame/dispatch [:group-chat-profile/start-editing])}]})])
 
-(defn member-actions [chat-id member us-admin?]
-  (concat
-   [{:action #(re-frame/dispatch [(if platform/desktop? :show-profile-desktop :chat.ui/show-profile) (:public-key member)])
-     :label  (i18n/label :t/view-profile)}]
-   (when-not (:admin? member)
-     [{:action #(re-frame/dispatch [:group-chats.ui/remove-member-pressed chat-id (:public-key member)])
-       :label  (i18n/label :t/remove-from-chat)}])
+(defn member-sheet [chat-id member us-admin?]
+  [react/view
+   [list-item/list-item
+    {:theme               :action
+     :icon                (multiaccounts/displayed-photo member)
+     :title               [chat.sheets/view-profile {:name   (contact/format-name member)
+                                                     :helper :t/view-profile}]
+     :accessibility-label :view-chat-details-button
+     :accessories         [:chevron]
+     :on-press            #(chat.sheets/hide-sheet-and-dispatch
+                            [(if platform/desktop? :show-profile-desktop :chat.ui/show-profile)
+                             (:public-key member)])}]
    (when (and us-admin?
               (not (:admin? member)))
-     [{:action #(re-frame/dispatch [:group-chats.ui/make-admin-pressed chat-id (:public-key member)])
-       :label  (i18n/label :t/make-admin)}])))
+     [list-item/list-item
+      {:theme               :action
+       :title               :t/make-admin
+       :accessibility-label :make-admin
+       ;; TODO(Ferossgp): Fix case for make admin icon
+       :icon                :main-icons/make_admin
+       :on-press            #(chat.sheets/hide-sheet-and-dispatch [:group-chats.ui/make-admin-pressed chat-id (:public-key member)])}])
+   (when-not (:admin? member)
+     [list-item/list-item
+      {:theme               :action
+       :title               :t/remove-from-chat
+       :accessibility-label :remove-from-chat
+       :icon                :main-icons/remove-contact
+       :on-press            #(chat.sheets/hide-sheet-and-dispatch [:group-chats.ui/remove-member-pressed chat-id (:public-key member)])}])])
 
 (defn render-member [chat-id {:keys [name public-key] :as member} admin? current-user-identity]
   [contact/contact-view
    {:contact             member
-    :extend-options      (member-actions chat-id member admin?)
+    :extend-options      #(re-frame/dispatch [:bottom-sheet/show-sheet
+                                              {:content (fn []
+                                                          [member-sheet chat-id member admin?])}])
     :info                (when (:admin? member)
                            (i18n/label :t/group-chat-admin))
     :extend-title        name
@@ -53,9 +74,15 @@
                        :key-fn    :address
                        :render-fn #(render-member chat-id % admin? current-user-identity)}])))
 
-(defn members-list [chat-id admin? current-user-identity]
+(defn members-list [chat-id admin? current-user-identity allow-adding-members?]
   [react/view
    [list-item/list-item {:title :t/members-title :type :section-header}]
+   (when allow-adding-members?
+     [list-item/list-item
+      {:title    :t/add-members
+       :icon     :main-icons/add-contact
+       :theme    :action
+       :on-press #(re-frame/dispatch [:navigate-to :add-participants-toggle-list])}])
    [chat-group-members-view chat-id admin? current-user-identity]])
 
 (defview group-chat-profile []
@@ -78,22 +105,10 @@
           [react/view profile.components.styles/profile-form
            [profile.components/group-header-display shown-chat]
            [react/view {:height 20}]
-           (when allow-adding-members?
-             [list-item/list-item
-              {:title    :t/add-members
-               :icon     :main-icons/add
-               :theme    :action
-               :on-press #(re-frame/dispatch [:navigate-to :add-participants-toggle-list])}])
            [list-item/list-item
-            {:title               :t/clear-history
-             :icon                :main-icons/close
-             :theme               :action
-             :on-press            #(re-frame/dispatch [:chat.ui/clear-history-pressed chat-id])
-             :accessibility-label :clear-history-button}]
-           [list-item/list-item
-            {:title               :t/delete-chat
-             :icon                :main-icons/arrow-left
-             :theme               :action
-             :on-press            #(re-frame/dispatch [:group-chats.ui/remove-chat-pressed chat-id])
-             :accessibility-label :delete-chat-button}]
-           [members-list chat-id admin? (first admins) current-pk]]]]))))
+            {:theme               :action-destructive
+             :title               :t/delete-chat
+             :accessibility-label :delete-chat-button
+             :icon                :main-icons/delete
+             :on-press            #(re-frame/dispatch [:group-chats.ui/remove-chat-pressed chat-id])}]
+           [members-list chat-id admin? (first admins) current-pk allow-adding-members?]]]]))))
