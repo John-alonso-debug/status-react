@@ -420,11 +420,10 @@
  :browser/send-to-bridge
  (fn [{:keys [message webview]}]
    (when (and message webview)
-     (.injectJavaScript webview
-                        (str "(function() {"
-                             "window.ReactNativeWebView.onMessage(\""
-                             (types/clj->json message)
-                             "\")})")))))
+     (let [msg (str "ReactNativeWebView.onMessage('"
+                    (types/clj->json message)
+                    "');")]
+       (.injectJavaScript webview msg)))))
 
 (re-frame/reg-fx
  :browser/call-rpc
