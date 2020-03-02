@@ -1,5 +1,6 @@
 (ns status-im.contact.db
   (:require [cljs.spec.alpha :as spec]
+            [clojure.set :as cset]
             [status-im.ethereum.core :as ethereum]
             [status-im.tribute-to-talk.db :as tribute-to-talk.db]
             [status-im.utils.gfycat.core :as gfycat]
@@ -106,7 +107,11 @@
 
 (defn get-all-contacts-in-group-chat
   [members admins contacts {:keys [public-key] :as current-account}]
-  (let [all-contacts (assoc contacts public-key current-account)]
+  (let [current-contact (-> current-account
+                            (select-keys  [:name :preferred-name :public-key :photo-path])
+                            (cset/rename-keys {:name           :alias
+                                               :preferred-name :name}))
+        all-contacts    (assoc contacts public-key current-contact)]
     (->> members
          (map #(or (get all-contacts %)
                    (public-key->new-contact %)))
