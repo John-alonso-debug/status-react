@@ -43,7 +43,12 @@
    :height           tabs-height
    :background-color colors/white
    :border-top-width 1
-   :border-top-color colors/black-transparent})
+   :border-top-color colors/gray-lighter})
+
+(def bottom-container-center
+  {:align-items     :center
+   :justify-content :center
+   :flex            1})
 
 (def toolbar-header-container
   {:align-items :center})

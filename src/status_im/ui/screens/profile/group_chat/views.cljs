@@ -9,6 +9,7 @@
             [status-im.ui.components.list.views :as list]
             [status-im.ui.screens.chat.sheets :as chat.sheets]
             [status-im.multiaccounts.core :as multiaccounts]
+            [status-im.ui.components.colors :as colors]
             [re-frame.core :as re-frame]
             [status-im.i18n :as i18n]
             [status-im.ui.components.list-item.views :as list-item]
@@ -103,8 +104,11 @@
          [group-chat-profile-toolbar false];admin?]
          [react/scroll-view
           [react/view profile.components.styles/profile-form
-           [profile.components/group-header-display shown-chat]
-           [react/view {:height 20}]
+           [react/view {:style {:border-bottom-width 1
+                                :padding-bottom      15
+                                :margin-bottom       8
+                                :border-bottom-color colors/gray-lighter}}
+            [profile.components/group-header-display shown-chat]]
            [list-item/list-item
             {:theme               :action-destructive
              :title               :t/delete-chat

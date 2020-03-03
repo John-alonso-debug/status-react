@@ -159,11 +159,23 @@
                           :bounces                      false
                           :keyboard-should-persist-taps :always
                           :enable-empty-sections        true}]]]
-       [bottom-container {:on-press            #(re-frame/dispatch [:group-chats.ui/create-pressed group-name])
-                          :disabled            (string/blank? group-name)
-                          :on-press-prev       #(re-frame/dispatch [:navigate-back])
-                          :label               (i18n/label :t/create-group-chat)
-                          :accessibility-label :create-group-chat-button}]])))
+       [react/view {:style styles/bottom-container}
+        [react/view
+         [button/button
+          {:type                :previous
+           :accessibility-label :previous-button
+           :label               (i18n/label :t/back)
+           :on-press            #(re-frame/dispatch [:navigate-back])}]]
+        [react/view {:style components.styles/flex}]
+        [react/view
+         [button/button
+          {:type                :secondary
+           :container-style     {:padding-horizontal 16}
+           :text-style          {:font-weight "500"}
+           :accessibility-label :create-group-chat-button
+           :label               (i18n/label :t/create-group-chat)
+           :disabled?           (not save-btn-enabled?)
+           :on-press            #(re-frame/dispatch [:group-chats.ui/create-pressed group-name])}]]]])))
 
 (defn searchable-contact-list []
   (let [search-value (reagent/atom nil)]
@@ -199,9 +211,15 @@
        :toggle-fn        group-toggle-contact
        :allow-new-users? (< selected-contacts-count
                             (dec constants/max-group-chat-participants))}]
-     [bottom-container {:on-press #(re-frame/dispatch [:navigate-to :new-group])
-                        :disabled (zero? selected-contacts-count)
-                        :label    (i18n/label :t/next)}]]))
+     [react/view {:style styles/bottom-container}
+      [react/view {:style components.styles/flex}]
+      [react/view
+       [button/button
+        {:type                :next
+         :accessibility-label :next-button
+         :label               (i18n/label :t/next)
+         :disabled?           (zero? selected-contacts-count)
+         :on-press            #(re-frame/dispatch [:navigate-to :new-group])}]]]]))
 
 ;; Add participants to existing group chat
 (views/defview add-participants-toggle-list []
@@ -214,6 +232,8 @@
         toolbar/default-nav-back
         [react/view {:style styles/toolbar-header-container}
          [react/view
+          [react/text (i18n/label :t/add-members)]]
+         [react/view
           [react/text {:style styles/toolbar-sub-header}
            (i18n/label :t/group-chat-members-count
                        {:selected (+ current-participants-count selected-contacts-count)
@@ -224,7 +244,11 @@
          :allow-new-users? (< (+ current-participants-count
                                  selected-contacts-count)
                               constants/max-group-chat-participants)}]
-       [bottom-container {:on-press
-                          #(re-frame/dispatch [:group-chats.ui/add-members-pressed])
-                          :disabled (zero? selected-contacts-count)
-                          :label    (i18n/label :t/add)}]])))
+       [react/view {:style styles/bottom-container}
+        [react/view {:style styles/bottom-container-center}
+         [button/button
+          {:type                :secondary
+           :accessibility-label :next-button
+           :label               (i18n/label :t/add)
+           :disabled?           (zero? selected-contacts-count)
+           :on-press            #(re-frame/dispatch [:group-chats.ui/add-members-pressed])}]]]])))

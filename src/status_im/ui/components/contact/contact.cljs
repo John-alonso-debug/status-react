@@ -43,14 +43,14 @@
     (when show-forward?
       [react/view styles/forward-btn
        [vector-icons/icon :main-icons/next]])
-    (when info
-      [react/text {:style styles/info-text}
-       info])
-    (when (and extended? extend-options)
-      [react/view
-       [react/touchable-highlight {:on-press            extend-options
+    [react/view {:style {:padding-left 16}}
+     (when info
+       [react/text {:style styles/info-text}
+        info])
+     (when (and extended? extend-options)
+       [react/touchable-highlight {:on-press             extend-options
                                    :accessibility-label :menu-option}
-        [vector-icons/icon :main-icons/more {:accessibility-label :options}]]])]])
+        [vector-icons/icon :main-icons/more {:accessibility-label :options}]])]]])
 
 (views/defview toggle-contact-view
   [{:keys [public-key] :as contact} selected-key on-toggle-handler disabled?]
