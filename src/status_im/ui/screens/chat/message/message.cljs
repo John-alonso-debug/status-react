@@ -104,10 +104,10 @@
 
 (defview message-content-status [{:keys [content]}]
   [react/view style/status-container
-   [react/text {:style style/status-text}
+   [react/text {:style (style/status-text)}
     (reduce
      (fn [acc e] (render-inline (:text content) false acc e))
-     [react/text-class {:style style/status-text}]
+     [react/text-class {:style (style/status-text)}]
      (-> content :parsed-text peek :children))]])
 
 (defn render-block [{:keys [content outgoing]} acc

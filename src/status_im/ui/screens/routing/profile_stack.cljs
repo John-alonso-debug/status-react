@@ -35,7 +35,8 @@
             [status-im.ui.screens.profile.tribute-to-talk.views :as tr-to-talk]
             [status-im.ui.screens.hardwallet.pin.views :as hardwallet.pin]
             [status-im.ui.screens.hardwallet.settings.views :as hardwallet.settings]
-            [status-im.ui.screens.routing.core :as navigation]))
+            [status-im.ui.screens.routing.core :as navigation]
+            [status-im.ui.screens.appearance.views :as appearance]))
 
 (defonce stack (navigation/create-stack))
 
@@ -76,6 +77,8 @@
      :component dapps-permissions/dapps-permissions}
     {:name      :privacy-and-security
      :component privacy-and-security/privacy-and-security}
+    {:name      :appearance
+     :component appearance/appearance}
     {:name      :language-settings
      :component language-settings/language-settings}
     {:name      :notifications-settings

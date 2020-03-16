@@ -3,7 +3,7 @@
             [status-im.ui.components.styles :as components.styles]
             [status-im.utils.styles :as styles]))
 
-(styles/def input
+(styles/defn input []
   {:border-radius      components.styles/border-radius
    :background-color   colors/gray-lighter
    :margin-horizontal  16
@@ -15,7 +15,7 @@
                         :width  "100%"}
    :android            {:padding 0}})
 
-(def browser-icon-container
+(defn browser-icon-container []
   {:width            40
    :height           40
    :border-radius    20
@@ -23,7 +23,7 @@
    :align-items      :center
    :justify-content  :center})
 
-(def dapp-store-container
+(defn dapp-store-container []
   {:margin             16
    :border-color       colors/gray-lighter
    :margin-top         8

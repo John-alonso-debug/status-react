@@ -29,7 +29,7 @@
    :align-items    :center
    :line-height    12})
 
-(def chat-tooltip
+(defn chat-tooltip []
   {:align-items   :center
    :border-color  colors/gray-lighter
    :border-width  1
@@ -91,7 +91,7 @@
   {:align-items     :center
    :justify-content :center})
 
-(def hr-wrapper
+(defn hr-wrapper []
   {:position         :absolute
    :width            "100%"
    :height           1
@@ -99,7 +99,7 @@
    :border-top-width 1
    :border-color     colors/gray-lighter})
 
-(def or-text
+(defn or-text []
   {:width            40
    :background-color colors/white
    :font-size        12
@@ -110,7 +110,7 @@
   {:margin-top      10
    :margin-bottom   18})
 
-(def close-icon-container
+(defn close-icon-container []
   {:width            24
    :height           24
    :border-radius    12

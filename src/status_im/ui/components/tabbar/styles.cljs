@@ -22,7 +22,7 @@
    :top      0
    :position :absolute})
 
-(def counter-public-container
+(defn counter-public-container []
   {:right            2
    :top              0
    :position         :absolute
@@ -31,7 +31,7 @@
    :height           16
    :justify-content  :center
    :align-items      :center
-   :background-color :white})
+   :background-color colors/white})
 
 (def counter-public
   {:background-color colors/blue
@@ -81,19 +81,14 @@
   {:color     (if active? colors/blue colors/gray)
    :font-size 11})
 
-(styles/def tabs-container
+(styles/defn tabs-container []
   {:height           minimized-tabs-height
    :align-self       :stretch
-   :background-color :white
+   :background-color colors/white
    :ios              {:shadow-radius  4
                       :shadow-offset  {:width 0 :height -5}
                       :shadow-opacity 0.3
-                      :shadow-color   "rgba(0, 9, 26, 0.12)"}
-   :desktop          {:background-color :white
-                      :shadow-radius    4
-                      :shadow-offset    {:width 0 :height -5}
-                      :shadow-opacity   0.3
-                      :shadow-color     "rgba(0, 9, 26, 0.12)"}})
+                      :shadow-color   "rgba(0, 9, 26, 0.12)"}})
 
 (def tabs
   {:align-self         :stretch
@@ -107,7 +102,7 @@
                                         :outputRange [(- tabs-diff) 0]})}]})
 
 (defn ios-titles-cover [inset]
-  {:background-color :white
+  {:background-color colors/white
    :position         :absolute
    :height           tabs-diff
    :align-self       :stretch
@@ -119,7 +114,7 @@
   (merge {:padding-bottom   inset
           :elevation        8
           :padding-top      (if minimized 0 tabs-diff)
-          :background-color :white}
+          :background-color colors/white}
          (when keyboard
            {:position :absolute
             :bottom   (- tabs-height)})))

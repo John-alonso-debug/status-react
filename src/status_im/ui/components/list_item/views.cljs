@@ -10,7 +10,7 @@
             [status-im.utils.label :as utils.label]
             [status-im.ui.components.radio :as radio]))
 
-(def divider
+(defn divider []
   [react/view {:height 1 :background-color colors/gray-lighter}])
 
 (defn- icon-column [icon theme disabled?]

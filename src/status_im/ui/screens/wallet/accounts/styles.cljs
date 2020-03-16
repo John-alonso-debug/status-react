@@ -21,7 +21,7 @@
           :padding-top        12
           :padding-bottom     6}))
 
-(def add-card
+(defn add-card []
   (merge card-common
          {:background-color colors/white
           :justify-content  :center

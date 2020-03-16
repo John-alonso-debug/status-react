@@ -87,7 +87,7 @@
                                    tabs.styles/counter)}
               [badge/message-counter (or (:other count) count) true]]
              (pos? (:public count))
-             [react/view {:style tabs.styles/counter-public-container}
+             [react/view {:style (tabs.styles/counter-public-container)}
               [react/view {:style tabs.styles/counter-public
                            :accessibility-label :public-unread-badge}]]))]
         (when-not platform/desktop?
@@ -121,7 +121,7 @@
         [react/animated-view {:style (tabs.styles/tabs-wrapper @keyboard-shown? @minimized-state inset)}
          [react/animated-view {:style (tabs.styles/animated-container visible?)}
           [react/view
-           {:style tabs.styles/tabs-container}
+           {:style (tabs.styles/tabs-container)}
            [react/view {:style tabs.styles/tabs}
             (for [[route-index
                    {:keys [nav-stack accessibility-label count-subscription content]}]

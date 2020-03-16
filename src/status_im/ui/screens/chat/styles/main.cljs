@@ -48,7 +48,7 @@
    :right            16
    :height           height})
 
-(def add-contact
+(defn add-contact []
   {:flex-direction      :row
    :align-items         :center
    :justify-content     :center

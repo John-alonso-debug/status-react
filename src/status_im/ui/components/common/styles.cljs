@@ -34,6 +34,7 @@
 (defn logo [icon-size]
   {:width  icon-size
    :height icon-size
+   :color :none
    :container-style {}})
 
 (def bottom-button
