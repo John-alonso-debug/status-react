@@ -1,5 +1,4 @@
 package im.status.ethereum;
-import android.webkit.WebView;
 
 import androidx.multidex.MultiDexApplication;
 import android.util.Log;
@@ -52,6 +51,5 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     public void onCreate() {
         super.onCreate();
         SoLoader.init(this, /* native exopackage */ false);
-        WebView.setWebContentsDebuggingEnabled(true);
     }
 }

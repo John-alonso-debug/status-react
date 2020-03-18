@@ -152,7 +152,7 @@ TODO: updating requires a pod update on iOS
 
 used for touch-id identification
 
-## "react-native-webview": "git+https://github.com/status-im/react-native-webview.git#js_injection_before_load"
+## "react-native-webview": "git+https://github.com/status-im/react-native-webview.git#v8.0.7_3"
 
 used for browser
 
