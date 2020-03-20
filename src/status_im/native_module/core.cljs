@@ -13,6 +13,7 @@
     (.-Status (.-NativeModules rn-dependencies/react-native))))
 
 (def adjust-resize 16)
+(def adjust-pan 32)
 
 (defn clear-web-data []
   (log/debug "[native-module] clear-web-data")

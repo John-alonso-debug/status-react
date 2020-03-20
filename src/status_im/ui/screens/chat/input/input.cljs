@@ -14,6 +14,7 @@
             [status-im.ui.components.icons.vector-icons :as vector-icons]
             [status-im.utils.platform :as platform]
             [status-im.utils.config :as config]
+            [status-im.native-module.core :as status]
             [status-im.ui.screens.chat.stickers.views :as stickers]
             [status-im.ui.screens.chat.extensions.views :as extensions]))
 
@@ -136,23 +137,49 @@
                                                 :color           colors/white}]]]]])))
 
 (defview container []
-  (letsubs [margin               [:chats/input-margin]
+  (letsubs [margin               [:chats/chat-panel-height]
             mainnet?             [:mainnet?]
             input-text           [:chats/current-chat-input-text]
             result-box           [:chats/current-chat-ui-prop :result-box]
             input-bottom-sheet   [:chats/current-chat-ui-prop :input-bottom-sheet]
             one-to-one-chat?     [:current-chat/one-to-one-chat?]
-            state-text           (reagent/atom "")]
-    {:component-will-unmount #(when platform/desktop?
-                                (re-frame/dispatch [:chat.ui/set-chat-input-text @state-text]))
+            state-text           (reagent/atom "")
+            listeners            (reagent/atom nil)
+            ref              (reagent/atom nil)]
+    {:component-did-mount (fn []
+                            (status/set-soft-input-mode status/adjust-pan)
+                            (reset! listeners
+                                    [(.addListener react/keyboard
+                                                   (if platform/android?
+                                                     "keyboardDidShow"
+                                                     "keyboardWillShow")
+                                                   (fn []
+                                                     (when @ref
+                                                       (.setNativeProps @ref #js {:marginBottom margin}))))
+                                     (.addListener react/keyboard
+                                                   (if platform/android?
+                                                     "keyboardDidHide"
+                                                     "keyboardWillShow")
+                                                   (fn []
+                                                     (when @ref
+                                                       (.setNativeProps @ref #js {:marginBottom 0}))))])
+                            (when-not (string/blank? input-text) (reset! state-text input-text)))
 
-     :component-did-mount    #(when-not (string/blank? input-text) (reset! state-text input-text))}
+     :component-will-unmount (fn []
+                               (status/set-soft-input-mode status/adjust-resize)
+                               (when (not-empty @listeners)
+                                 (doseq [listener @listeners]
+                                   (when listener
+                                     (.remove listener))))
+                               (when platform/desktop?
+                                 (re-frame/dispatch [:chat.ui/set-chat-input-text @state-text])))}
     (let [single-line-input? (:singleLineInput result-box)
           set-text           #(reset! state-text %)
-          input-text-empty? (if platform/desktop?
-                              (string/blank? state-text)
-                              (string/blank? input-text))]
-      [react/view {:style     (style/root margin)}
+          input-text-empty?  (if platform/desktop?
+                               (string/blank? state-text)
+                               (string/blank? input-text))]
+      [react/view {:style (style/root)
+                   :ref   #(reset! ref %)}
        [reply-message-view]
        [react/view {:style style/input-container}
         [input-view {:single-line-input? single-line-input? :set-text set-text :state-text state-text}]

@@ -8,9 +8,8 @@
 (def border-height 1)
 (def max-input-height (* 5 min-input-height))
 
-(defn root [margin-bottom]
+(defn root []
   {:background-color colors/white
-   :margin-bottom    margin-bottom
    :flex-direction   :column
    :border-top-width border-height
    :border-top-color colors/gray-lighter})

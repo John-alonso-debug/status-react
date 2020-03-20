@@ -599,34 +599,13 @@
      (- kb-height tabs.styles/minimized-tabs-height 34)
 
      (pos? kb-height)
-     (- kb-height tabs.styles/minimized-tabs-height)
+     (- kb-height (when platform/ios? tabs.styles/minimized-tabs-height))
 
      platform/iphone-x? 299
 
      platform/ios? 258
 
      :else 272)))
-
-(re-frame/reg-sub
- :chats/input-margin
- :<- [:keyboard-height]
- :<- [:chats/current-chat-ui-prop :input-bottom-sheet]
- (fn [[kb-height input-bottom-sheet]]
-   (cond
-     ;; During the transition of bottom sheet and close of keyboard happens
-     ;; The heights are summed up and input grows too much
-     (not (nil? input-bottom-sheet))
-     0
-
-     (and platform/iphone-x? (> kb-height 0))
-     (- kb-height tabs.styles/minimized-tabs-height 34)
-
-     platform/ios?
-     (+ kb-height (- (if (> kb-height 0)
-                       tabs.styles/minimized-tabs-height
-                       0)))
-
-     :default 0)))
 
 (re-frame/reg-sub
  :chats/active-chats
