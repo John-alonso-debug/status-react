@@ -109,6 +109,7 @@
            [(.addListener react/keyboard  "keyboardDidShow"
                           (fn []
                             (reset! keyboard-shown? true)
+                            (reagent/flush)
                             (animation/start
                              (animation/timing keyboard-visible
                                                {:toValue  1
@@ -119,7 +120,8 @@
                              (animation/timing keyboard-visible
                                                {:toValue  0
                                                 :duration 200})
-                             #(reset! keyboard-shown? false))))])))
+                             #(do (reset! keyboard-shown? false)
+                                  (reagent/flush)))))])))
       :component-will-unmount
       (fn []
         (when (not-empty @listeners)
