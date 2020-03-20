@@ -10,5 +10,7 @@
           :header-mode        :none}
    [{:name      :open-dapp
      :component open-dapp/open-dapp}
-    {:name      :browser
-     :component browser/browser}]])
+    {:name         :browser
+     :options      {:animationEnabled false}
+     :back-handler :noop
+     :component    browser/browser}]])
