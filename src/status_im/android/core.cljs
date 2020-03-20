@@ -57,6 +57,6 @@
 
 (defn init []
   (status/set-soft-input-mode status/adjust-resize)
-  (ocall rn-dependencies/react-native-screens "enableScreens")
+  #_(ocall rn-dependencies/react-native-screens "enableScreens")
   (core/init app-root)
   (snoopy/subscribe!))
