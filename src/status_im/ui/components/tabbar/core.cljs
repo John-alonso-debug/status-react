@@ -12,14 +12,13 @@
    [re-frame.core :as re-frame]))
 
 (defonce visible? (animation/create-value 0))
-
-(defonce minimized-state (reagent/atom nil))
+(defonce visible?' (animation/create-value 0))
 (defonce last-to-value (atom 1))
 
 (defn animate
-  ([visible duration to]
-   (animate visible duration to nil))
-  ([visible duration to callback]
+  ([visible visible' duration to]
+   (animate visible visible' duration to nil))
+  ([visible visible' duration to callback]
    (when (not= to @last-to-value)
      (reset! last-to-value to)
      (animation/start
@@ -28,7 +27,13 @@
                          :duration        duration
                          :easing          (animation/cubic)
                          :useNativeDriver true})
-      callback))))
+      callback)
+     ;; FIXME(Ferossgp): Because margin top is not native moving elements to top is not smooth
+     (animation/start
+      (animation/timing visible'
+                        {:toValue         to
+                         :duration        duration
+                         :useNativeDriver false})))))
 
 (defn main-tab? [view-id]
   (contains?
@@ -37,12 +42,8 @@
 
 (defn minimize-bar [route-name]
   (if (main-tab? route-name)
-    (do
-      (reset! minimized-state false)
-      (animate visible? 150 0))
-    (do
-      (reset! minimized-state true)
-      (animate visible? 150 1))))
+    (animate visible? visible?' 150 0)
+    (animate visible? visible?' 150 1)))
 
 (def tabs-list-data
   (->>
@@ -96,8 +97,9 @@
             label]])]])))
 
 (defn tabs []
-  (let [listeners       (atom [])
-        keyboard-shown? (reagent/atom false)]
+  (let [listeners        (atom [])
+        keyboard-shown?  (reagent/atom false)
+        keyboard-visible (animation/create-value 0)]
     (reagent/create-class
      {:component-did-mount
       (fn []
@@ -106,10 +108,18 @@
            listeners
            [(.addListener react/keyboard  "keyboardDidShow"
                           (fn []
-                            (reset! keyboard-shown? true)))
+                            (reset! keyboard-shown? true)
+                            (animation/start
+                             (animation/timing keyboard-visible
+                                               {:toValue  1
+                                                :duration 200}))))
             (.addListener react/keyboard  "keyboardDidHide"
                           (fn []
-                            (reset! keyboard-shown? false)))])))
+                            (animation/start
+                             (animation/timing keyboard-visible
+                                               {:toValue  0
+                                                :duration 200})
+                             #(reset! keyboard-shown? false))))])))
       :component-will-unmount
       (fn []
         (when (not-empty @listeners)
@@ -118,25 +128,23 @@
               (.remove listener)))))
       :reagent-render
       (fn [{:keys [navigate index inset]}]
-        [react/animated-view {:style (tabs.styles/tabs-wrapper @keyboard-shown? @minimized-state inset)}
-         [react/animated-view {:style (tabs.styles/animated-container visible?)}
-          [react/view
-           {:style tabs.styles/tabs-container}
-           [react/view {:style tabs.styles/tabs}
-            (for [[route-index
-                   {:keys [nav-stack accessibility-label count-subscription content]}]
-                  tabs-list-data
-
-                  :let [{:keys [icon title]} content]]
-              ^{:key nav-stack}
-              [tab
-               {:icon                icon
-                :label               title
-                :on-press            #(navigate (name nav-stack))
-                :accessibility-label accessibility-label
-                :count-subscription  count-subscription
-                :active?             (= (str index) (str route-index))
-                :nav-stack           nav-stack}])]]]
+        [react/animated-view {:style          (tabs.styles/tabs-wrapper @keyboard-shown? keyboard-visible)
+                              :pointer-events (if @keyboard-shown? "none" "auto")}
+         [react/animated-view {:style (tabs.styles/space-handler visible?' inset)}]
+         [react/animated-view {:style (tabs.styles/animated-container visible? inset)}
+          (for [[route-index
+                 {:keys [nav-stack accessibility-label count-subscription content]}]
+                tabs-list-data
+                :let [{:keys [icon title]} content]]
+            ^{:key nav-stack}
+            [tab
+             {:icon                icon
+              :label               title
+              :on-press            #(navigate (name nav-stack))
+              :accessibility-label accessibility-label
+              :count-subscription  count-subscription
+              :active?             (= (str index) (str route-index))
+              :nav-stack           nav-stack}])]
          [react/view
           {:style (tabs.styles/ios-titles-cover inset)}]])})))
 
