@@ -20,10 +20,10 @@
             [status-im.utils.http :as http]
             [status-im.utils.js-resources :as js-res]
             [status-im.ui.components.chat-icon.screen :as chat-icon]
+            [status-im.ui.screens.browser.ref :as browser-ref]
             [status-im.ui.screens.browser.accounts :as accounts]
             [status-im.utils.debounce :as debounce])
   (:require-macros
-   [status-im.utils.slurp :refer [slurp]]
    [status-im.utils.views :as views]))
 
 (defn toolbar-content [url url-original {:keys [secure?]} url-editing? webview]
@@ -122,6 +122,7 @@
         :dapp-name                             name
         :ref                                   #(do
                                                   (reset! webview %)
+                                                  (reset! browser-ref/browser-ref %)
                                                   (re-frame/dispatch [:set :webview-bridge %]))
         :source                                (when (and url (not resolving?)) {:uri url})
         :java-script-enabled                   true

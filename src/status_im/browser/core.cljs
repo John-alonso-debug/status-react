@@ -22,6 +22,7 @@
             [status-im.utils.universal-links.core :as universal-links]
             [taoensso.timbre :as log]
             [status-im.signing.core :as signing]
+            [status-im.ui.screens.browser.ref :as browser-ref]
             [status-im.multiaccounts.update.core :as multiaccounts.update]
             [status-im.ui.components.bottom-sheet.core :as bottom-sheet]))
 
@@ -419,8 +420,8 @@
 (re-frame/reg-fx
  :browser/send-to-bridge
  (fn [{:keys [message webview]}]
-   (when (and message webview)
-     (.sendToBridge webview (types/clj->json message)))))
+   (when (and message @browser-ref/browser-ref)
+     (.sendToBridge @browser-ref/browser-ref (types/clj->json message)))))
 
 (re-frame/reg-fx
  :browser/call-rpc
