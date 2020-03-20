@@ -139,7 +139,7 @@
         :on-load                                    #(re-frame/dispatch [:browser/loading-started])
         :on-error                                   #(re-frame/dispatch [:browser/error-occured])
         :injected-java-script-before-content-loaded (js-res/ethereum-provider (str network-id))
-        :injected-java-script                  (js-res/webview-js)}])]
+        :injected-java-script                       (js-res/webview-js)}])]
    [navigation url-original can-go-back? can-go-forward? dapps-account]
    [permissions.views/permissions-panel [(:dapp? browser) (:dapp browser) dapps-account] show-permission]
    (when show-tooltip
