@@ -116,9 +116,9 @@ function web3Response (payload, result){
 }
 
 function getSyncResponse (payload) {
-    if (payload.method == "eth_accounts" && currentAccountAddress){
+    if (payload.method == "eth_accounts" && (typeof currentAccountAddress !== "undefined")) {
         return web3Response(payload, [currentAccountAddress])
-    } else if (payload.method == "eth_coinbase" && currentAccountAddress){
+    } else if (payload.method == "eth_coinbase" && (typeof currentAccountAddress !== "undefined")) {
         return web3Response(payload, currentAccountAddress)
     } else if (payload.method == "net_version" || payload.method == "eth_chainId"){
         return web3Response(payload, networkId)
