@@ -380,7 +380,6 @@
         dapp-name (if dapp? name (http/url-host url-original))]
     (cond
       (and (= type constants/history-state-changed)
-           platform/ios?
            (not= "about:blank" url))
       (fx/merge cofx
                 (update-browser-history browser url)
