@@ -621,7 +621,5 @@ var TopLevel = {
   "multiAccountStoreAccount" : function () {},
   "multiAccountImportMnemonic" : function () {},
   "multiAccountImportPrivateKey" : function () {},
-  "validateMnemonic" : function () {},
-  "eventEmitter" : function () {},
-  "initialMode" : function () {}
+  "validateMnemonic" : function () {}
 }
