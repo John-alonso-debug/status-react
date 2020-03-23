@@ -2,7 +2,7 @@ if(typeof EthereumProvider === "undefined"){
 var callbackId = 0;
 var callbacks = {};
 
-function bridgeSend(data){
+bridgeSend = function (data) {
     ReactNativeWebView.postMessage(JSON.stringify(data));
 }
 
