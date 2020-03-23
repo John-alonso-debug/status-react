@@ -9,7 +9,8 @@
             [status-im.i18n :as i18n]))
 
 (defn button [label icon theme selected?]
-  [react/touchable-highlight {:on-press #(re-frame/dispatch [:multiaccounts.ui/appearance-switched theme])}
+  [react/touchable-highlight
+   {:on-press #(re-frame/dispatch [:multiaccounts.ui/appearance-switched theme])}
    [react/view (merge {:align-items :center :padding 8 :border-radius 20}
                       (when selected?
                         {:background-color colors/blue-light}))
@@ -22,8 +23,8 @@
     [react/view {:flex 1}
      [topbar/topbar {:title :t/appearance :show-border? true}]
      [list-item/list-item {:type :section-header :title :t/preference :container-margin-top 8}]
-     [react/view {:flex-direction :row :flex 1 :padding-horizontal 8 :justify-content :space-between
-                  :margin-top     16}
+     [react/view {:flex-direction  :row :flex 1 :padding-horizontal 8
+                  :justify-content :space-between :margin-top 16}
       [button :t/light :theme-light 1 (= 1 appearance)]
       [button :t/dark :theme-dark 2 (= 2 appearance)]
       [button :t/system :theme-system 0 (= 0 appearance)]]]))
