@@ -763,16 +763,6 @@
    (group-chats/create cofx chat-name)))
 
 (handlers/register-handler-fx
- :group-chats.ui/name-changed
- (fn [cofx [_ chat-name]]
-   (group-chats/handle-name-changed cofx chat-name)))
-
-(handlers/register-handler-fx
- :group-chats.ui/save-pressed
- (fn [cofx _]
-   (group-chats/save cofx)))
-
-(handlers/register-handler-fx
  :group-chats.ui/add-members-pressed
  (fn [cofx _]
    (group-chats/add-members cofx)))

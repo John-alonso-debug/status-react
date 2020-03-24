@@ -16,6 +16,7 @@
             [status-im.ui.components.react :as react]
             [status-im.ui.components.list.views :as list]
             [status-im.ui.components.toolbar.view :as toolbar]
+            [status-im.ui.components.topbar :as topbar]
             [status-im.ui.components.search-input.view :as search]
             [status-im.utils.platform :as platform]
             [status-im.ui.components.contact.contact :as contact]
@@ -252,3 +253,28 @@
            :label               (i18n/label :t/add)
            :disabled?           (zero? selected-contacts-count)
            :on-press            #(re-frame/dispatch [:group-chats.ui/add-members-pressed])}]]]])))
+
+(defonce new-group-chat-name (atom nil))
+
+(views/defview edit-group-chat-name []
+  (views/letsubs [{:keys [name chat-id] :as current-chat} [:chats/current-chat]]
+    [react/view {:style {:flex 1}}
+     [topbar/topbar
+      {:title       :t/edit-group
+       :modal?      true}]
+     [react/view add-new.styles/new-chat-container
+      [react/view add-new.styles/new-chat-input-container
+       [react/text-input
+        {:on-change-text #(reset! new-group-chat-name %)
+         :default-value name
+         :on-submit-editing #(when (seq @new-group-chat-name)
+                               (re-frame/dispatch [:group-chats.ui/name-changed chat-id @new-group-chat-name]))
+         :placeholder         (i18n/label :t/enter-contact-code)
+         :style               add-new.styles/input
+         ;; This input is fine to preserve inputs
+         ;; so its contents will not be erased
+         ;; in onWillBlur navigation event handler
+         :preserve-input?     true
+         :accessibility-label :enter-contact-code-input
+         :return-key-type     :go}]]
+      [react/view {:width 16}]]]))

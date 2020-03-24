@@ -15,6 +15,8 @@
             [status-im.ui.screens.routing.chat-stack :as chat-stack]
             [status-im.ui.screens.routing.wallet-stack :as wallet-stack]
             [status-im.ui.screens.wallet.events :as wallet.events]
+            [status-im.ui.screens.group.views :as group-chat]
+
             [status-im.ui.screens.routing.profile-stack :as profile-stack]
             [status-im.ui.screens.routing.browser-stack :as browser-stack]
             [status-im.chat.models.loading :as chat.loading]
@@ -71,6 +73,9 @@
       {:name       :new-public-chat
        :transition :presentation-ios
        :component  new-public-chat/new-public-chat}
+      {:name       :edit-group-chat-name
+       :transition :presentation-ios
+       :component  group-chat/edit-group-chat-name}
       {:name      :contact-code
        :component wallet.components/contact-code}
       {:name      :qr-scanner

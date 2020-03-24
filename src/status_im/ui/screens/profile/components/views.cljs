@@ -87,6 +87,12 @@
 
 (defn group-header-display [{:keys [chat-name color contacts]}]
   [react/view (merge styles/profile-header-display {:padding-horizontal 16})
+   [react/touchable-highlight
+    {:on-press #(re-frame/dispatch [:navigate-to :edit-group-chat-name])}
+    [vector-icons/icon :icons/edit {:color           colors/gray
+                                    :width           16
+                                    :height          16
+                                    :container-style {:margin-right 4}}]]
    [chat-icon.screen/profile-icon-view nil chat-name color nil 64 nil]
    [react/view styles/profile-header-name-container
     [react/text {:style           styles/profile-name-text

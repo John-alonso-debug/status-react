@@ -42,3 +42,7 @@
          :accessibility-label :group-info-button
          :icon                :main-icons/delete
          :on-press            #(hide-sheet-and-dispatch [:my-profile/remove-current-photo])}])]))
+
+(defn edit-group-chat-name []
+  (fn []
+    [react/view {:flex 1}]))

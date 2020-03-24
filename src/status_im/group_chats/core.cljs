@@ -108,23 +108,14 @@
 (defn- valid-name? [name]
   (spec/valid? :profile/name name))
 
-(fx/defn update-name [{:keys [db]} name]
-  {:db (-> db
-           (assoc-in [:group-chat-profile/profile :valid-name?] (valid-name? name))
-           (assoc-in [:group-chat-profile/profile :name] name))})
-
-(fx/defn handle-name-changed
-  "Store name in profile scratchpad"
-  [cofx new-chat-name]
-  (update-name cofx new-chat-name))
-
-(fx/defn save
+(fx/defn name-changed
   "Save chat from edited profile"
-  [{:keys [db] :as cofx}]
-  (let [new-name (get-in cofx [:db :group-chat-profile/profile :name])
-        current-chat-id (:current-chat-id db)]
-    (when (valid-name? new-name)
-      {::json-rpc/call [{:method (json-rpc/call-ext-method (waku/enabled? cofx) "changeGroupChatName")
-                         :params [nil current-chat-id new-name]
-                         :on-success #(re-frame/dispatch [::chat-updated %])}]})))
+  {:events [:group-chats.ui/name-changed]}
+  [{:keys [db] :as cofx} chat-id new-name]
+  (println new-name chat-id)
+  (when (valid-name? new-name)
+    {:db (assoc-in db [:chats chat-id :name] new-name)
+     ::json-rpc/call [{:method (json-rpc/call-ext-method (waku/enabled? cofx) "changeGroupChatName")
+                       :params [nil chat-id new-name]
+                       :on-success #(re-frame/dispatch [::chat-updated %])}]}))
 

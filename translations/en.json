@@ -322,6 +322,7 @@
     "dismiss": "Dismiss",
     "done": "Done",
     "edit": "Edit",
+    "edit-group": "Edit group",
     "edit-profile": "Edit profile",
     "empty-chat-description": "There are no messages \nin this chat yet",
     "empty-chat-description-one-to-one": "Any messages you send here are encrypted and can only be read by you and ",
